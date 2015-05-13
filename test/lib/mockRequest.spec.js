@@ -314,8 +314,31 @@ describe('mockRequest', function() {
 
     it('should not return param, when not found in params/body/query', function() {
       request = mockRequest.createRequest();
-      expect(request.get('key')).to.not.exist;
+      expect(request.param('key')).to.not.exist;
       expect(request.header('key')).to.not.exist;
+    });
+
+    it('should respect false-y parameter values', function() {
+      var options = {
+        params: {
+          blank: '',
+          false: false
+        },
+        body: {
+          zero: 0
+        },
+        query: {
+          undefined: undefined,
+          null: null
+        }
+      };
+
+      request = mockRequest.createRequest(options);
+      expect(request.param('blank')).to.equal('');
+      expect(request.param('false')).to.equal(false);
+      expect(request.param('zero')).to.equal(0);
+      expect(request.param('undefined')).to.equal(undefined);
+      expect(request.param('null')).to.equal(null);
     });
 
   });
