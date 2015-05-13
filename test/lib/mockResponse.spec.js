@@ -454,6 +454,35 @@ describe('mockResponse', function() {
         expect(response.emit).to.have.been.calledWith('end');
       });
 
+      it('should accept view and callback arguments', function() {
+        var view = 'view';
+        var cb = sinon.spy();
+
+        response.render(view, cb);
+        expect(response._getRenderView()).to.equal(view);
+        expect(response._getRenderData()).to.deep.equal({});
+        expect(response.emit).to.have.been.calledTwice;
+        expect(response.emit).to.have.been.calledWith('render');
+        expect(response.emit).to.have.been.calledWith('end');
+        expect(cb.calledOnce);
+        expect(cb.calledWith(null));
+      });
+
+      it('should accept view, data and callback arguments', function() {
+        var view = 'view';
+        var data = { key: 'value' };
+        var cb = sinon.spy();
+
+        response.render(view, data, cb);
+        expect(response._getRenderView()).to.equal(view);
+        expect(response._getRenderData()).to.deep.equal(data);
+        expect(response.emit).to.have.been.calledTwice;
+        expect(response.emit).to.have.been.calledWith('render');
+        expect(response.emit).to.have.been.calledWith('end');
+        expect(cb.calledOnce);
+        expect(cb.calledWith(null));
+      });
+
     });
 
     // TODO: fix in 2.0; method should mimic Express Response.send()
